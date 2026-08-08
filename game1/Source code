@@ -1,0 +1,955 @@
+
+                                                                      //TEST RUN PROJECT//
+
+
+#Md Fahad Islam Dipta , 1.1.2024
+
+# include "iGraphics.h"
+# include "gl.h"
+#include<iostream>
+#include<stdlib.h>
+#include<unistd.h>
+#include <fstream>
+#define screenWidth 1500
+#define screenHeight 1200
+
+char highScoreText[20];
+int highScore;
+int mposx,mposy;
+int x=0;
+int y=0;
+int x2=0;
+int dy;
+int dy1;
+int dy2;
+int height2=30;
+int ballx=100;
+int bally=500;                       //priviously ball y was 515 . changed for dino game.
+int i=0;
+int height=70;
+int s=0;
+int j;
+int gravity=10;
+int ground =500;
+int obx1=0;                           // MUST READ :------
+int obx2=0;
+int obx3=0;
+int obx4=0;
+int obx5=0;
+int obcordx1=600;                   // HERE BALL MEANS DINOSAUR ..
+int obcordx2=1600;
+int obcordx3=2600;
+int obcordx4=3600;
+int obcordx5=4600;
+int obstacleMoving=1;
+int jumpCount = 0;
+
+int obstacleHeight=60;
+int obstacleWidth1 =48;
+int obstacleWidth2 =102;
+int obstacleWidth3 =74;
+int obstacleWidth4 =153;
+int obstacleWidth5 =157;
+int score=0;
+int Is=1;
+int birdx=700;
+int birdy=650;
+int x3=20;
+int cloudx1=600;
+int cloudy1=900;
+int cloudx2=900;
+int cloudy2=1000;
+int cloudx3=1500;
+int cloudy3=950;
+
+
+int groundx1=00;
+int groundx2=50;
+int groundx3=100;
+int groundx4=150;
+int groundx5=200;
+int groundx6=250;
+int groundx7=300;
+int groundx8=350;
+int groundx9=400;
+int groundx10=450;
+int groundx11=500;
+int groundx12=550;
+int groundx13=600;
+int groundx14=650;
+int groundx15=700;
+int groundx16=750;
+int groundx17=800;
+int groundx18=850;
+int groundx19=900;
+int groundx20=950;
+int groundx21=1000;
+int groundx22=1050;
+int groundx23=1100;
+int groundx24=1150;
+int groundx25=1200;
+int groundx26=1250;
+int groundx27=1300;
+int groundx28=1350;
+int groundx29=1400;
+int groundx30=1450;
+
+
+int groundy1=455;
+int picIndex1=0;
+int picIndex2=0;
+char scoreText[20];
+char dinorun[100][100] ={"new dino 1.bmp","new dino 2.bmp"};
+char dinorunnight[100][100]={"dino1 for night mode.bmp","dino2 for night mode.bmp"};
+//char dog[100][100] ={"dog1.bmp","dog2.bmp"};
+char bird[100][100] ={"bird for dino 1.bmp","bird for dino 2.bmp"};
+char birdnight[100][100]={"bird for dino 1 night.bmp","bird for dino 2night.bmp"};
+char cactus1 [200]="new cactus 1.bmp";
+char cactus2 [200]="new cactus 2.bmp";
+char cactus3 [200]="new cactus 3.bmp";                    //char cactus [200]="new cactus 1.bmp";
+char cactus4 [200]="new cactus 4.bmp";
+char cactus5 [200]="new cactus 5.bmp";
+
+char menu1[2000]="menu of dino game 11.bmp";
+char cactusnight[100]="cacatus 1 night.bmp";
+char moon[100]="moon for dino.bmp";
+char name[100] = "";
+char wbg[100]="WBG.bmp";
+char insjump[100]="PRESS 'W' TO JUMP.bmp";
+char dinorunjump[100]="new dino 4.bmp";
+char dinocollision[100]="new dino 3.bmp";
+char dinocloud[100]="dino cloud.bmp";
+char ground1[100]="image1x1.bmp";
+char ground2[100]="image2x1.bmp";
+char ground3[100]="image3x1.bmp";
+char ground4[100]="image4x1.bmp";
+char ground5[100]="image5x1.bmp";
+char ground6[100]="image6x1.bmp";
+char ground7[100]="image7x1.bmp";
+char ground8[100]="image8x1.bmp";
+char ground9[100]="image9x1.bmp";
+char ground10[100]="image10x1.bmp";
+char ground11[1100]="image11x1.bmp";
+char ground12[100]="image12x1.bmp";
+char ground13[100]="image13x1.bmp";
+char ground14[100]="image14x1.bmp";
+char ground15[100]="image15x1.bmp";
+char ground16[100]="image16x1.bmp";
+char ground17[100]="image17x1.bmp";
+char ground18[100]="image18x1.bmp";
+char ground19[100]="image19x1.bmp";
+char ground20[100]="image20x1.bmp";
+char ground21[100]="image21x1.bmp";
+char ground22[100]="image22x1.bmp";
+char ground23[100]="image23x1.bmp";
+char ground24[100]="image24x1.bmp";
+char ground25[100]="image25x1.bmp";
+char ground26[100]="image26x1.bmp";
+char ground27[100]="image27x1.bmp";
+char ground28[100]="image28x1.bmp";
+char ground29[100]="image29x1.bmp";
+char ground30[100]="image30x1.bmp";
+char gameover[100]="game over.bmp";
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+// Game state declare...........
+
+enum GameState
+{
+    MENU,
+    GAME,
+    INSTRUCTIONS,
+    SCORE,
+
+};
+
+
+char gameState = MENU;              // Initialize the gameState to MENU at the start of the game
+
+
+
+
+
+
+// Function to save the high score to a file
+int saveHighScore(int highScore) {
+    std::ofstream file("highScore.txt");
+
+    if (file.is_open()) {
+        file << highScore;
+        file.close();
+    }
+    return highScore;
+}
+
+
+
+//     COLLISION CHEAK ...................
+
+int checkCollision()
+{
+    int dinoRight = x + x2 + ballx+60; // Rightmost coordinate of the dinosaur
+    int dinoBottom = y + bally;    // Bottom coordinate of the dinosaur
+
+   int obstacleRight1 = obcordx1 + obx1 + obstacleWidth1; // Rightmost coordinate of the obstacle
+   int obstacleLeft1 =obcordx1+obx1;
+    int obstacleTop1 = 465 + 150; // Top coordinate of the obstacle
+
+     int obstacleRight2 = obcordx2 + obx2 + obstacleWidth2; // Rightmost coordinate of the obstacle
+   int obstacleLeft2 =obcordx2+obx2;
+    int obstacleTop2 = 465 + 150; // Top coordinate of the obstacle
+
+     int obstacleRight3 = obcordx3 + obx3 + obstacleWidth3; // Rightmost coordinate of the obstacle
+   int obstacleLeft3 =obcordx3+obx3;
+    int obstacleTop3 = 465 + 210; // Top coordinate of the obstacle
+
+     int obstacleRight4 = obcordx4 + obx4 + obstacleWidth4; // Rightmost coordinate of the obstacle
+   int obstacleLeft4 =obcordx4+obx4;
+    int obstacleTop4 = 465 + 210; // Top coordinate of the obstacle
+
+     int obstacleRight5 = obcordx5 + obx5 + obstacleWidth5; // Rightmost coordinate of the obstacle
+   int obstacleLeft5 =obcordx5+obx5;
+    int obstacleTop5 = 465 + 150; // Top coordinate of the obstacle
+
+
+    // Check for collision using bounding box collision detection
+   if (dinoRight>=obstacleLeft1 || obstacleTop1>=dinoBottom )
+       if (dinoRight >= obcordx1 + obx1 && x + x2 + ballx +60<= obcordx1+ obx1 + obstacleWidth1 &&
+        dinoBottom >= 500 && y + bally <= obstacleTop1 || dinoRight >= obcordx2 + obx2 && x + x2 + ballx-10 <= obcordx2 + obx2 + obstacleWidth2 &&
+        dinoBottom >= 500 && y + bally <= obstacleTop2 || dinoRight >= obcordx3 + obx3 && x + x2 + ballx-10 <= obcordx3 + obx3 + obstacleWidth3 &&
+        dinoBottom >= 500 && y + bally <= obstacleTop3 || dinoRight >= obcordx4 + obx4 && x + x2 + ballx-10 <=  obcordx4 + obx4 + obstacleWidth4&&
+        dinoBottom >= 500 && y + bally <= obstacleTop4 || dinoRight >= obcordx5 + obx5 && x + x2 + ballx-10 <= obcordx5 + obx5 + obstacleWidth5 &&
+        dinoBottom >= 500 && y + bally <= obstacleTop5  )
+         {
+        return 1; // Collision detected
+         }
+
+
+    return 0; // No collision
+}
+
+
+
+//score count
+
+void updateScore()
+{
+    score = score + Is; // Increase the score by 1 point every 100 milliseconds
+}
+
+
+
+
+
+
+void iDraw()
+{
+
+    if (gameState==MENU)
+    {
+        iClear();
+        iShowBMP(0,0,menu1);
+        iSetColor(255,0,100);
+
+
+        //
+       // iLine(470,1200,470,0);
+
+
+    }                             // 950 -1070 -y ..170-470-x
+
+
+    else if(gameState==GAME)
+    {
+
+    iClear();
+
+    iSetColor(255,255,255);
+    if(score>=-2&&score<=-1)
+    {
+        iSetColor(0,0,0);               // MAKES SCREEN BLACK AND ENABLES NIGHT MODE........................
+    }
+
+    iFilledRectangle(x,y,screenWidth,screenHeight);
+    iSetColor(0,0,0);
+
+
+
+
+   iLine(170,0,170,screenHeight);           // big cactus top 465+210(3,4 cactus)       215 170(width)
+   iLine(0,465+210,screenWidth,465+210);                 // small cactus top 465+150(1,2,5 cactus)
+
+   iShowBMP( groundx1,groundy1,ground1);                  //             ground is made from here (image section)
+   iShowBMP( groundx2,groundy1,ground2);
+   iShowBMP( groundx3,groundy1,ground3);
+   iShowBMP( groundx4,groundy1,ground4);
+   iShowBMP( groundx5,groundy1,ground5);
+    iShowBMP( groundx6,groundy1,ground6);                  //             ground is made from here (image section)
+   iShowBMP( groundx7,groundy1,ground7);
+   iShowBMP( groundx8,groundy1,ground8);
+   iShowBMP( groundx9,groundy1,ground9);
+   iShowBMP( groundx10,groundy1,ground10);
+
+    iShowBMP( groundx11,groundy1,ground11);                  //             ground is made from here (image section)
+   iShowBMP( groundx12,groundy1,ground12);
+   iShowBMP( groundx13,groundy1,ground13);
+   iShowBMP( groundx14,groundy1,ground14);
+   iShowBMP( groundx15,groundy1,ground15);
+
+    iShowBMP( groundx16,groundy1,ground16);                  //             ground is made from here (image section)
+   iShowBMP( groundx17,groundy1,ground17);
+   iShowBMP( groundx18,groundy1,ground18);
+   iShowBMP( groundx19,groundy1,ground19);
+   iShowBMP( groundx20,groundy1,ground20);
+
+                      //             ground is made from here (image section)
+   iShowBMP( groundx21,groundy1,ground21);
+   iShowBMP( groundx22,groundy1,ground22);
+   iShowBMP( groundx23,groundy1,ground23);
+   iShowBMP( groundx24,groundy1,ground24);
+ iShowBMP( groundx25,groundy1,ground25);                  //             ground is made from here (image section)
+   iShowBMP( groundx26,groundy1,ground26);
+   iShowBMP( groundx27,groundy1,ground27);
+   iShowBMP( groundx28,groundy1,ground28);
+   iShowBMP( groundx29,groundy1,ground29);
+ iShowBMP( groundx30,groundy1,ground30);                  //             ground is made from here (image section)
+
+
+
+
+
+    iShowBMP(cloudx1,cloudy1,dinocloud);
+    iShowBMP(cloudx2,cloudy2,dinocloud);
+    iShowBMP(cloudx3,cloudy3,dinocloud);
+
+if(score>=-2&&score<=-1)
+   {
+      iShowBMP(800,1000,moon);
+   }
+
+if(score>=-2&&score<=-1)
+   {                                                                            // FOR WHITE COLOR IGNORE USE - (255 << 16) | (255 << 8) | 255
+
+    iShowBMP((.5*obcordx1+obx1),465,cactusnight );
+
+    iShowBMP((2*obcordx1)+obx1,465,cactusnight );
+    iShowBMP((4*obcordx1)+obx1,465, cactusnight);
+
+    iShowBMP((1.5*obcordx1)+obx1,465,cactusnight );
+   }
+   else
+   {
+    iShowBMP2((obcordx1+obx1),465,cactus1, (255 << 16) | (255 << 8) | 255) ;
+    iShowBMP2((obcordx2+obx2),465,cactus2, (255 << 16) | (255 << 8) | 255) ;
+    iShowBMP2((obcordx3+obx3),465,cactus3, (255 << 16) | (255 << 8) | 255) ;
+    iShowBMP2((obcordx4+obx4),465,cactus4, (255 << 16) | (255 << 8) | 255) ;
+    iShowBMP2((obcordx5+obx5),465,cactus5, (255 << 16) | (255 << 8) | 255) ;
+   }
+
+if(!checkCollision())
+{
+
+
+
+
+   if(bally!=500)
+   {
+       iShowBMP2(x+x2+ballx,y+bally,dinorunjump,(255 << 16) | (255 << 8) | 255);
+   }
+
+else if(bally==500)
+{
+
+
+ if(score>=-2&&score<=-1)
+  {
+    iShowBMP2(x+x2+ballx,y+bally, dinorunnight[picIndex1],255);
+  }
+  else
+  {
+    iShowBMP2(x+x2+ballx,y+bally, dinorun[picIndex1],(255 << 16) | (255 << 8) | 255);
+  }
+}
+
+ if(score>=-2&&score<=-1)
+ {
+     iShowBMP2(birdx+x3,birdy,birdnight[picIndex2],0);
+ }
+ else
+ {
+    iShowBMP2(birdx+x3,birdy,bird[picIndex2],(255 << 16) | (255 << 8) | 255);                    // x3 is for bird forward distance
+ }
+
+
+        //score
+ //char scoreText[20]; // Allocate a char array to hold the score as a string
+    sprintf(scoreText, "Score: %d", score); // Format the score as a string
+
+    iText(50, 1100, scoreText, GLUT_BITMAP_HELVETICA_18);
+
+}
+
+
+    //game over
+
+   if (checkCollision())
+        {
+        // Display "Game Over" message
+        iSetColor(255, 0, 0); // Red color
+        //iText(600, 750, "Game Over!", GLUT_BITMAP_TIMES_ROMAN_24);
+        iShowBMP2(600,750,gameover,(255 << 16) | (255 << 8) | 255);
+
+        iShowBMP2(x+x2+ballx,y+bally,dinocollision,(255 << 16) | (255 << 8) | 255);
+        x=0;
+        x2=0;
+
+        y=0;
+
+        dy=0;
+
+        obstacleMoving=0;
+
+        Is=0;
+
+        sprintf(scoreText, " YOUR SCORE: %d", score);
+
+        if (score > highScore)
+        {
+        highScore = score;
+        saveHighScore(highScore);
+        }
+        iText(555, 900, scoreText, GLUT_BITMAP_TIMES_ROMAN_24);
+        iSetColor(0, 0, 255);
+        iText(555, 670, "For Restart Click 'R' ", GLUT_BITMAP_TIMES_ROMAN_24);
+        iText(555, 400, "For High Score Click 'H' ", GLUT_BITMAP_TIMES_ROMAN_24);
+
+
+
+        return;
+
+        }
+
+
+
+}
+
+   else if(gameState==SCORE)
+   {
+       /*if(score>highScore)
+    {
+        highScore=score;
+    }*/
+    iShowBMP(0,0,wbg);
+      // Display high score
+
+        sprintf(highScoreText, "High Score: %d", highScore);
+        iText(555, 1100, highScoreText, GLUT_BITMAP_HELVETICA_18);
+
+
+
+   }
+
+
+   else if(gameState==INSTRUCTIONS)
+   {
+   iShowBMP(0,0,insjump);
+   }
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+void iMouseMove(int mx,int my)
+{
+
+}
+void iMouse(int button,int state,int mx, int my)
+{
+
+    if(gameState==MENU)
+    {
+
+    if(button == GLUT_LEFT_BUTTON&& state == GLUT_DOWN)
+    {
+
+        if(470>=mx&&mx>=170&&1070>=my&&my>=950)
+      {
+         gameState=GAME;
+      }
+
+      else if(454>=mx&&mx>=186&&840>=my&&my>=805)
+      {
+          gameState=INSTRUCTIONS;
+      }
+
+
+    }
+    }
+
+
+    if(button == GLUT_RIGHT_BUTTON&& state == GLUT_DOWN)
+    {
+
+    }
+
+
+}
+void iPassiveMouseMove(int mx,int my)
+{
+
+    //
+    mposx=mx;
+    mposy=my;
+    if (mx==2){}
+    else if(my==2){}
+
+}
+
+
+
+//GAME RESET
+int reset()
+{
+
+ x=0;
+ y=0;
+ x2=0;
+ ballx=100;
+ bally=500;
+ dy=0;
+ obx1=0;
+  obx2=0;
+obx3=0;
+obx4=0;
+ obx5=0;
+
+ obcordx1=600;                   // HERE BALL MEANS DINOSAUR ..
+ obcordx2=1600;
+ obcordx3=2600;
+ obcordx4=3600;
+ obcordx5=4600;
+ obstacleMoving=1;
+ Is=1;
+score=0;
+
+return 1;
+}
+
+
+
+
+void iKeyboard(unsigned char key)
+{
+
+
+    if(key=='w')
+    {
+
+      /*if(1000>=(x+x2+ballx)&& (x+x2+ballx)>=700 && (y+bally)==650)
+      {
+
+          dy=height;
+      }
+      else if(400>=(x+x2+ballx)&& (x+x2+ballx)>=250 && (y+bally)==740)           // for line2
+    {
+        dy=height;
+    }
+    else if(150>=(x+x2+ballx)&& (x+x2+ballx)>=0 && (y+bally)==875)               // for line3
+
+    {
+        dy=height;
+    }*/
+    /*int w1,w2;
+     if(bally==ground)
+    {
+        dy=height;
+        w1=1;
+    }
+    if(bally>=ground+100&&bally<=ground+300&&w1==1)
+    {
+        dy=height2;
+        w1+=1;
+    } */
+if (bally == ground)
+        {
+            // First jump from the ground
+            dy = height;
+            jumpCount = 1;
+        }
+        else if (jumpCount == 1)
+        {
+            // Second jump while in the air
+            dy = height2;
+            jumpCount = 2;
+        }
+    }
+
+
+
+
+
+    else if (key=='r')
+    {
+       reset() ;
+    }
+
+
+    else if(key=='h')
+    {
+        gameState=SCORE ;
+    }
+    else if(key=='d')
+    {
+
+    }
+
+}
+void iSpecialKeyboard(unsigned char key)
+{
+
+    if(key == GLUT_KEY_UP)
+    {
+
+    }
+    else if(key == GLUT_KEY_DOWN)
+    {
+
+
+    }
+    else if(key == GLUT_KEY_LEFT)
+    {
+
+    }
+    else if(key == GLUT_KEY_RIGHT)
+    {
+
+    }
+
+}
+
+void ballmovement()
+{
+
+    bally+=dy;                               // THIS SECTION IS FOR DINOSAUR JUMPP!
+   dy-=gravity;
+
+
+
+
+    if (bally <= 500)
+    {
+        bally = 500; // Reset the ball to the ground level
+        dy = 0;     // Reset the vertical velocity
+    }
+
+
+      picIndex1++;
+     if(picIndex1>=2)
+     {
+         picIndex1=0;
+     }
+
+
+}
+
+
+void startObstacleMovement()
+{
+    obstacleMoving = 1; // Start obstacle movement again
+}
+
+
+
+
+
+void obostruclemovement()
+{
+    if (obstacleMoving) {
+
+   obx1-=12;
+   obx2-=12;
+   obx3-=12;
+   obx4-=12;
+   obx5-=12;
+   if(obcordx1+obx1<=-1200)
+   {
+      obcordx1=screenWidth;
+      obx1=0;
+      obstacleMoving=0;
+     iSetTimer(1.35,startObstacleMovement); // Start timer for time break (2 seconds)
+   }
+   if(obcordx2+obx2<=-2200)
+   {
+      obcordx2=screenWidth;
+      obx2=0;
+      obstacleMoving=0;
+     iSetTimer(2.6,startObstacleMovement); // Start timer for time break (2 seconds)
+   }
+
+   if(obcordx3+obx3<=-3200)
+   {
+      obcordx3=screenWidth;
+      obx3=0;
+      obstacleMoving=0;
+     iSetTimer(1.9,startObstacleMovement); // Start timer for time break (2 seconds)
+   }
+
+   if(obcordx4+obx4<=-4200)
+   {
+      obcordx4=screenWidth;
+      obx4=0;
+      obstacleMoving=0;
+     iSetTimer(1.7,startObstacleMovement); // Start timer for time break (2 seconds)
+   }
+
+   if(obcordx5+obx5<=-5200)
+   {
+      obcordx5=screenWidth;
+      obx5=0;
+      obstacleMoving=0;
+     iSetTimer(2.3,startObstacleMovement); // Start timer for time break (2 seconds)
+   }
+
+
+    }
+
+
+
+}
+
+
+void cloudmovement()
+{
+    cloudx1-=12;
+    if(cloudx1<=-800)
+    {                                                                     //CLOUD IS LINKED WITH OBSTACLE SPEED..
+        cloudx1=screenWidth;
+    }
+
+    cloudx2-=12;
+    if(cloudx2<=-1200)
+    {
+        cloudx2=screenWidth;
+    }
+
+    cloudx3-=12;
+    if(cloudx3<=-1200)
+    {
+        cloudx3=screenWidth;
+    }
+}
+
+void birdmovement()
+{
+
+      picIndex2++;
+     if(picIndex2>=2)
+     {
+         picIndex2=0;
+     }
+      birdx-=x3;
+       if(birdx<=0)
+       {
+           birdx=screenWidth;
+
+       }
+}
+
+
+void groundmovement()
+{
+    groundx1-=12;
+    if(groundx1<=0)
+    {
+        groundx1=screenWidth;
+    }
+    groundx2-=12;
+    if(groundx2<=0)
+    {
+        groundx2=screenWidth;
+    }
+    groundx3-=12;
+    if(groundx3<=0)
+    {
+        groundx3=screenWidth;
+    }
+    groundx4-=12;
+    if(groundx4<=0)
+    {
+        groundx4=screenWidth;
+    }
+    groundx5-=12;
+    if(groundx5<=0)
+    {
+        groundx5=screenWidth;
+    }
+    groundx6-=12;
+    if(groundx6<=0)
+    {
+        groundx6=screenWidth;
+    }
+    groundx7-=12;
+    if(groundx7<=0)
+    {
+        groundx7=screenWidth;
+    }
+    groundx8-=12;
+    if(groundx8<=0)
+    {
+        groundx8=screenWidth;
+    }
+    groundx9-=12;
+    if(groundx9<=0)
+    {
+        groundx9=screenWidth;
+    }
+    groundx10-=12;
+    if(groundx10<=0)
+    {
+        groundx10=screenWidth;
+    }
+    groundx11-=12;
+    if(groundx11<=0)
+    {
+        groundx11=screenWidth;
+    }
+    groundx12-=12;
+    if(groundx12<=0)
+    {
+        groundx12=screenWidth;
+    }
+    groundx13-=12;
+    if(groundx13<=0)
+    {
+        groundx13=screenWidth;
+    }
+    groundx14-=12;
+    if(groundx14<=0)
+    {
+        groundx14=screenWidth;
+    }
+    groundx15-=12;
+    if(groundx15<=0)
+    {
+        groundx15=screenWidth;
+    }
+    groundx16-=12;
+    if(groundx16<=0)
+    {
+        groundx16=screenWidth;
+    }
+    groundx17-=12;
+    if(groundx17<=0)
+    {
+        groundx17=screenWidth;
+    }
+    groundx18-=12;
+    if(groundx18<=0)
+    {
+        groundx18=screenWidth;
+    }
+    groundx19-=12;
+    if(groundx19<=0)
+    {
+        groundx19=screenWidth;
+    }
+    groundx20-=12;
+    if(groundx20<=0)
+    {
+        groundx20=screenWidth;
+    }
+    groundx21-=12;
+    if(groundx21<=0)
+    {
+        groundx21=screenWidth;
+    }
+    groundx22-=12;
+    if(groundx22<=0)
+    {
+        groundx22=screenWidth;
+    }
+    groundx23-=12;
+    if(groundx23<=0)
+    {
+        groundx23=screenWidth;
+    }
+    groundx24-=12;
+    if(groundx24<=0)
+    {
+        groundx24=screenWidth;
+    }
+    groundx25-=12;
+    if(groundx25<=0)
+    {
+        groundx25=screenWidth;
+    }
+    groundx26-=12;
+    if(groundx26<=0)
+    {
+        groundx26=screenWidth;
+    }
+    groundx27-=12;
+    if(groundx27<=0)
+    {
+        groundx27=screenWidth;
+    }
+    groundx28-=12;
+    if(groundx28<=0)
+    {
+        groundx28=screenWidth;
+    }
+
+    groundx29-=12;
+    if(groundx29<=0)
+    {
+        groundx29=screenWidth;
+    }
+    groundx30-=12;
+    if(groundx30<=0)
+    {
+        groundx30=screenWidth;
+    }
+}
+
+
+
+
+
+
+
+int main()
+
+{
+iSetTimer(70,ballmovement);
+iSetTimer(40,cloudmovement);
+iSetTimer(40,groundmovement);
+iSetTimer(40,obostruclemovement);
+iSetTimer(100,updateScore);
+iSetTimer(100,birdmovement);
+
+
+  iInitialize(screenWidth,screenHeight,"PROJECT TEST RUN");
+  return 0;
+}
